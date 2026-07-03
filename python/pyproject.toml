@@ -1,0 +1,20 @@
+[project]
+name = "saline-solution"
+version = "0.1.0"
+description = "A saline solution calculator"
+readme = "README.md"
+authors = [
+    { name = "Wolfgang Sourdeau", email = "Wolfgang@Contre.COM" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "textual>=8.2.8",
+]
+
+[project.scripts]
+saline-solution-tui = "saline_solution:tui_main"
+saline-solution-cli = "saline_solution:cli_main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

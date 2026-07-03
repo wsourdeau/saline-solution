@@ -6,9 +6,9 @@ from typing import Literal
 from math import sqrt, log
 from os import getenv
 
-from saline_solution.constants import BASES, ACIDS, PH_SCALE, Kw, WATER_MOLARITY, MSGS
-from saline_solution.types import Acid, Base, Salt
-from saline_solution.utils import (
+from .constants import BASES, ACIDS, PH_SCALE, Kw, WATER_MOLARITY, MSGS
+from .types import Acid, Base, Salt
+from .utils import (
     beep,
     count_uppers,
     create_valence_str,
@@ -180,12 +180,12 @@ def _calculate(salt: Salt, concentration: float):
 
     if dr != 3:
         print(f"inv_Kh = {inv_Kh}")
-        # x = (
-        #     WATER_MOLARITY
-        #     * inv_Kh
-        #     * concentration
-        #     / (WATER_MOLARITY * inv_Kh + inv_Kh * concentration)
-        # )
+        x = (
+            WATER_MOLARITY
+            * inv_Kh
+            * concentration
+            / (WATER_MOLARITY * inv_Kh + inv_Kh * concentration)
+        )
         print(f"x = {x}")
         if dr == 0:
             ionic_charge_str = _get_ionic_charge("+", salt.acid.vAc)
@@ -215,7 +215,7 @@ def _list_salts(salts: Mapping[str, Salt]):
         nbr_columns = screen_width // (longest_salt + 1)
         column_width = screen_width // nbr_columns
 
-        for i, salt in enumerate(salts):
+        for i, salt in enumerate(salts.values()):
             len_salt = len(salt.formula)
             fixed_salt = (
                 f"{salt.formula}{' ' * (column_width - len_salt)}"
@@ -238,7 +238,7 @@ def _read_command() -> str:
     return command
 
 
-def main():
+def cli_app_main():
     salts = _build_salts(ACIDS, BASES)
 
     print(
@@ -272,7 +272,3 @@ def main():
             else:
                 concentration = _get_concentration()
                 _calculate(salt, concentration)
-
-
-if __name__ == "__main__":
-    main()

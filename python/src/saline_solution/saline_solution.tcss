@@ -1,0 +1,86 @@
+Screen {
+    width: 80;
+    height: 25;
+}
+
+#elements-entry {
+    margin: 1;
+    min-height: 10;
+}
+
+/* Acid and Base Lists */
+#acid-list {
+    width: 1fr;
+    min-width: 10;
+    height: 100%;
+    border: round;
+    color: $primary;
+}
+
+#base-list {
+    width: 1fr;
+    min-width: 10;
+    height: 100%;
+    border: round;
+    color: $primary;
+}
+
+#salt-display {
+    margin: 2;
+    width: 30;
+    height: 100%;
+    min-width: 30;
+    content-align: center middle;
+    color: $primary;
+}
+
+#concentration-entry {
+    margin-top: 1;
+    width: 100%;
+    content-align: center top;
+}
+
+/* Input and Button */
+#concentration-input {
+    margin-top: 1;
+    height: 1;
+    border: none;
+}
+
+#calculate-button {
+    margin-top: 1;
+    height: 1;
+    border: none;
+}
+
+/* Results */
+#more-details-switch {
+    border: none;
+    padding: 0;
+}
+
+#results-pane {
+    height: 1fr;
+    width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    color: $primary;
+    overflow-y: auto;
+}
+
+#results-buttons {
+    width: 100%;
+    content-align: right middle;
+    text-align: right;
+    border: none;
+}
+
+#results-buttons  Button {
+    content-align: center top;
+    text-align: center;
+    height: 1;
+    width: auto;
+    border: none;
+}
+
