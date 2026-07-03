@@ -18,3 +18,9 @@ saline-solution-cli = "saline_solution:cli_main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "textual-dev>=1.8.0",
+    "textual-serve>=1.1.3",
+]
