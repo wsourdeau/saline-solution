@@ -1,0 +1,190 @@
+name: saline_solution
+description: |
+  Skill for the Saline Solution chemistry calculator project. Provides domain knowledge
+  about calculating pH and chemical properties of salt solutions, along with project
+  structure understanding for multi-language implementations (QuickBasic, C, Python, C++).
+
+instructions: |
+  ## Project Context
+  
+  You are working on the Saline Solution project - a chemistry tool that calculates pH,
+  ion concentrations, and hydrolysis properties of salt solutions in water. The project
+  originated as a QuickBasic CLI program in 1994 and has been reimplemented in multiple
+  languages, each with CLI and TUI versions.
+  
+  ## Reference Implementations
+  
+  - **CLI Logic Reference**: QuickBasic (basic/CHIMIE.BAS) and C (c/saline-solution-cli.c)
+  - **TUI Logic Reference**: Python (python/src/saline_solution/tui_app.py)
+  - **Chemistry Accuracy Reference**: Python (python/src/saline_solution/calculations.py)
+  - **Variable Naming Reference**: Python version is most accurate
+  
+  **Note**: QuickBasic and C versions may have issues in chemistry logic and variable naming.
+  
+  ## Chemistry Domain Knowledge
+  
+  ### Core Concept
+  The program calculates chemical properties of aqueous salt solutions by determining which
+  of four possible hydrolysis reactions is dominant, then calculating equilibrium
+  concentrations based on that reaction.
+  
+  ### The Four Reactions
+  
+  1. **Acid Hydrolysis** (Reaction 0): Cation + H2O → Conjugate base + H3O+
+     - Constant: Ka = 10^(-pKa)
+     - Dominant when Ka is the largest constant
+  
+  2. **Base Hydrolysis** (Reaction 1): Anion + H2O → Conjugate acid + OH-
+     - Constant: Kb = 10^(-pKb)
+     - Dominant when Kb is the largest constant
+  
+  3. **Salt Hydrolysis** (Reaction 2): Cation + Anion + H2O → Conjugate acid + Conjugate base
+     - Constant: inv_Kh = Ka / Ka2, where Ka2 = 10^(-(14 - pKb))
+     - Dominant when inv_Kh is the largest constant
+  
+  4. **Water Autoionization** (Reaction 3): H2O + H2O → H3O+ + OH-
+     - Constant: Kw = 10^(-14)
+     - Dominant when Kw is the largest constant (neutral salts)
+  
+  ### Determining Dominant Reaction
+  
+  The dominant reaction is the one with the LARGEST constant:
+  ```
+  K = Ka, dr = 0
+  if K < Kb: K = Kb, dr = 1
+  if K < inv_Kh: K = inv_Kh, dr = 2
+  if K < Kw: K = Kw, dr = 3
+  ```
+  
+  ### Calculations by Dominant Reaction
+  
+  **Acid Hydrolysis (dr=0):**
+  - [H3O+] = sqrt(Ka * concentration)
+  - [OH-] = 10^(-14) / [H3O+]
+  - pH = -log([H3O+]) / log(10)
+  - pOH = -log([OH-]) / log(10)
+  - inv_Kh = Ka
+  - x = sqrt(Ka * concentration) / concentration (hydrolysis degree)
+  
+  **Base Hydrolysis (dr=1):**
+  - [OH-] = sqrt(Kb * concentration)
+  - [H3O+] = 10^(-14) / [OH-]
+  - pH = -log([H3O+]) / log(10)
+  - pOH = -log([OH-]) / log(10)
+  - inv_Kh = 10^(-15.7) / 10^(pKb - 14)
+  - x = sqrt(Kb * concentration) / concentration
+  
+  **Salt Hydrolysis (dr=2):**
+  - pH = (pKa + pKa2) / 2, where pKa2 = 14 - pKb
+  - [H3O+] = 10^(-pH)
+  - pOH = 14 - pH
+  - [OH-] = 10^(-pOH)
+  - Kh = Kw / (Ka * Kb) (standard hydrolysis constant)
+  - inv_Kh = Ka / Ka2
+  - x = sqrt(Kh * concentration) / concentration
+  
+  **Neutral (dr=3):**
+  - pH = 7
+  - [H3O+] = 10^(-7)
+  - [OH-] = 10^(-7)
+  - pOH = 7
+  - inv_Kh = Kw
+  - x = 0
+  
+  ### Chemical Data
+  
+  **Constants:**
+  - Kw = 10^(-14)
+  - PH_SCALE = 14.0
+  - WATER_MOLARITY = 55.5 mol/L (at 25°C)
+  
+  **Acids (Cations):** K(15.6,1), Na(14.8,1), NH4/NH₄(9.2,1), Ca(12.7,2), Pb(8.8,2), 
+  Cd(8.5,2), Cu(8,2), Zn(7.9,2), Sn(1.7,2), Al(4,3), Cr(3.9,3)
+  
+  **Bases (Anions):** Cl(21,1), Br(23,1), F(10.8,1), I(25,1), NO2/NO₂(10.6,1), 
+  CN(4.7,1), CH3COO/CH₃COO(9.25,1), S(1,2), PO4/PO₄(2.1,3), CO3/CO₃(3.6,2), 
+  AsO4/AsO₄(2.5,3)
+  
+  ### Data Structures
+  
+  All implementations use similar data structures:
+  - **Acid**: {name, pKa, vAc} where vAc = valence/charge of cation
+  - **Base**: {name, pKb, vBa} where vBa = valence/charge of anion
+  - **Salt**: {formula, acid, base} - combination of one acid and one base
+  - **DominantReaction**: Enum with values 0-3 (ACID_HYDROLYSIS, BASE_HYDROLYSIS, SALT_HYDROLYSIS, NEUTRAL)
+  
+  ### Formula Generation
+  
+  **Salt Formula:** Combines acid and base with parentheses when needed.
+  - Parentheses added when: (base.vBa != 1 AND acid has multiple uppercase letters) OR
+    (acid.vAc != 1 AND base has multiple uppercase letters)
+  - Example: Ca2+ + CO32- → CaCO3 (no parentheses)
+  - Example: Ca2+ + PO43- → Ca3(PO4)2 (parentheses for phosphate)
+  
+  **Conjugate Base (from acid):**
+  - If acid has hydrogen: remove last char and decrement (NH4+ → NH3 or NH₄⁺ → NH₃)
+  - Else: add OH and reduce charge by 1 (Ca2+ → CaOH+)
+  
+  **Conjugate Acid (from base):**
+  - Prefix with H and reduce charge by 1 (CO32- → HCO3-)
+  
+  ## Project Structure
+  
+  ```
+  SalineSolution/
+  ├── basic/CHIMIE.BAS           # Original QuickBasic CLI (1994)
+  ├── c/saline-solution-cli.c    # C CLI implementation
+  ├── cpp/imgui/                 # C++ TUI with ImGui
+  │   ├── include/Calculations.h
+  │   ├── include/ChemicalData.h
+  │   ├── src/Calculations.cpp
+  │   └── src/ChemicalData.cpp
+  └── python/src/saline_solution/
+      ├── types.py             # Data structures
+      ├── constants.py         # Chemical constants and lists
+      ├── utils.py             # Utility functions
+      ├── calculations.py       # Core chemistry logic
+      ├── cli_app.py           # CLI interface
+      └── tui_app.py           # TUI interface (Textual)
+  ```
+  
+  ## Implementation Notes
+  
+  - **Python**: Most accurate naming, uses Unicode (H₂O, H₃O⁺), clean separation
+  - **C**: ASCII only, integer concentration input (limitation), faithful to QuickBasic
+  - **C++**: Modern OOP, uses ImGui for TUI, full Unicode support
+  - **QuickBasic**: Original, French messages, character encoding issues
+  
+  ## Common Patterns
+  
+  **CLI Flow:**
+  1. Show welcome and commands (L=list, F=quit)
+  2. Prompt: "Sel (ou commande) : "
+  3. Handle command or salt selection
+  4. For salts: prompt concentration, show reactions, identify dominant, display results
+  
+  **TUI Flow:**
+  1. Display acid list and base list
+  2. User selects acid and base
+  3. Salt formula shown
+  4. User enters concentration
+  5. Calculate and display results
+  
+  ## When Helping with This Project
+  
+  - For chemistry logic questions, prefer Python calculations.py as reference
+  - For CLI interface questions, check QuickBasic and C versions
+  - For TUI interface questions, check Python tui_app.py
+  - For data structure questions, Python types.py is canonical
+  - When adding new acids/bases, add to constants file in all implementations
+  - When fixing bugs, verify against chemistry principles first
+
+triggers:
+  - "saline solution"
+  - "chimie"
+  - "pH calculation"
+  - "salt hydrolysis"
+  - "acid hydrolysis"
+  - "base hydrolysis"
+  - "hydrolysis degree"
+  - project files in SalineSolution directory
