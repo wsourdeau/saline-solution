@@ -159,6 +159,7 @@ class ResultsPane(Container):
 | pOH | {r.pOH:.4f} |
 | [H₃O⁺] | {r.H3O:.2e} M |
 | [OH⁻] | {r.OH:.2e} M |
+| inv_Kh | {r.inv_Kh:.2e} |
 | Hydrolysis degree (x) | {r.x:.4f} |
 """
 
@@ -172,8 +173,6 @@ class ResultsPane(Container):
 
         md = f"""
 ## Dominant Reaction: {MSGS[dr_index]}
-
-### Final Results
 
 | Property | Value |
 |----------|-------|
