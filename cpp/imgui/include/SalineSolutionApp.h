@@ -3,6 +3,9 @@
 #include <string>
 #include <memory>
 #include <vector>
+
+// Include from common library
+#include "ChemicalData.h"
 #include "Calculations.h"
 
 // Forward declarations for ImGui and GLFW

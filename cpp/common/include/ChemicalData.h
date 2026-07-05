@@ -1,33 +1,24 @@
 #pragma once
 
+#include <array>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
 
-// Superscript characters for chemical notation
-const std::string SUPERSCRIPT_DIGITS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
-const std::string SUPERSCRIPT_MINUS = "⁻";
-const std::string SUPERSCRIPT_PLUS = "⁺";
+extern const std::array<std::string, 10> SUPERSCRIPT_DIGITS;
+extern const std::string SUPERSCRIPT_MINUS;
+extern const std::string SUPERSCRIPT_PLUS;
 
-// Subscript characters for chemical notation
-const std::string SUBSCRIPT_DIGITS = "₀₁₂₃₄₅₆₇₈₉";
+extern const std::array<std::string, 10> SUBSCRIPT_DIGITS;
 
-// Chemical constants
-const double WATER_MOLARITY = 55.5; // mol/L at 25°C
-const double PH_SCALE = 14.0;
-const double Kw = 1e-14; // Water ion product constant
+extern const double WATER_MOLARITY; // mol/L at 25°C
+extern const double PH_SCALE;
+extern const double Kw; // Water ion product constant
 
-// Messages for dominant reactions (same as Python version)
-const std::vector<std::string> MSGS = {
-    "reaction acide/d'acide fort et de base faible",
-    "reaction basique/d'acide faible et de base forte",
-    "d'acide faible et de base faible",
-    "neutre/d'acide fort et de base forte"
-};
+extern const std::vector<std::string> MSGS;
 
-// Parenthesis constants
-const std::pair<std::string, std::string> HIDDEN_PARENS = {"", ""};
-const std::pair<std::string, std::string> VISIBLE_PARENS = {"(", ")"};
+extern const std::pair<std::string, std::string> HIDDEN_PARENS;
+extern const std::pair<std::string, std::string> VISIBLE_PARENS;
 
 // Enums
 enum class DominantReaction {
@@ -116,10 +107,6 @@ struct CalculationResults {
           product_concentration(product_concentration) {}
 };
 
-// Global chemical data
-extern const std::vector<Acid> ACIDS;
-extern const std::vector<Base> BASES;
-
 // Utility functions
 std::string superscripted(const std::string& str);
 std::string subscripted(const std::string& str);
@@ -127,3 +114,7 @@ int count_uppers(const std::string& str);
 bool has_hydrogen(const std::string& molecule);
 std::string create_valence_str(int valence);
 bool str_is_float(const std::string& float_str);
+
+// Global chemical data
+extern const std::vector<Acid> ACIDS;
+extern const std::vector<Base> BASES;

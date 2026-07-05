@@ -8,10 +8,11 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#include "Calculations.h"
-#include "ChemicalData.h"
-
 #include "SalineSolutionApp.h"
+
+// Include from common library
+#include "ChemicalData.h"
+#include "Calculations.h"
 
 
 // GL callback for errors
